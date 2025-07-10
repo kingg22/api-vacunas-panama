@@ -18,7 +18,7 @@ spotless = "7.1.0"
 # https://github.com/jk1/Gradle-License-Report/releases
 gradle-license-report = "2.9"
 # https://github.com/jlleitschuh/ktlint-gradle/releases
-ktlint = "12.3.0"
+ktlint = "13.0.0"
 
 # Testing
 # https://github.com/Kotlin/kotlinx-kover/releases
