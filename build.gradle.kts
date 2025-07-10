@@ -20,21 +20,18 @@ plugins {
 }
 
 group = "io.github.kingg22"
-version = "0.15.0"
+version = "0.16.0"
 
-java {
-    toolchain {
+kotlin {
+    jvmToolchain {
         languageVersion.set(JavaLanguageVersion.of(21))
         vendor.set(JvmVendorSpec.GRAAL_VM)
     }
-}
-
-kotlin {
-    jvmToolchain(21)
     compilerOptions {
         freeCompilerArgs.addAll("-Xjsr305=strict", "-Xannotation-target-all")
         jvmTarget.set(JvmTarget.JVM_21)
         javaParameters.set(true)
+        allWarningsAsErrors.set(true)
     }
 }
 
@@ -44,6 +41,7 @@ dependencies {
     implementation(enforcedPlatform(libs.quarkus.bom))
     implementation(libs.bundles.projectImplementation)
     implementation(libs.bundles.quarkusImplementation)
+
     testImplementation(libs.bundles.projectTestImplementation)
     testImplementation(libs.bundles.quarkusTestImplementation)
 }
@@ -68,7 +66,7 @@ tasks.withType<Test> {
 }
 
 ktlint {
-    version.set("1.5.1-SNAPSHOT")
+    version.set("1.6.0")
 }
 
 spotless {

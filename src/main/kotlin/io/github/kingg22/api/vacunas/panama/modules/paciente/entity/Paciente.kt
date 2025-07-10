@@ -1,11 +1,14 @@
 package io.github.kingg22.api.vacunas.panama.modules.paciente.entity
 
 import io.github.kingg22.api.vacunas.panama.modules.paciente.domain.PacienteModel
+import io.github.kingg22.api.vacunas.panama.modules.paciente.dto.ViewPacienteVacunaEnfermedadDto
 import io.github.kingg22.api.vacunas.panama.modules.persona.entity.Persona
 import io.mcarle.konvert.api.KonvertFrom
 import io.quarkus.hibernate.reactive.panache.kotlin.PanacheCompanionBase
 import io.quarkus.hibernate.reactive.panache.kotlin.PanacheEntityBase
 import jakarta.persistence.Column
+import jakarta.persistence.ColumnResult
+import jakarta.persistence.ConstructorResult
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
@@ -15,6 +18,7 @@ import jakarta.persistence.Index
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.MapsId
 import jakarta.persistence.OneToOne
+import jakarta.persistence.SqlResultSetMapping
 import jakarta.persistence.Table
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
@@ -28,6 +32,28 @@ import java.util.UUID
     name = "pacientes",
     indexes = [
         Index(name = "uq_pacientes_id_temporal", columnList = "identificacion_temporal", unique = true),
+    ],
+)
+@SqlResultSetMapping(
+    name = "view_paciente_vacuna_enfermedad",
+    classes = [
+        ConstructorResult(
+            targetClass = ViewPacienteVacunaEnfermedadDto::class,
+            columns = [
+                ColumnResult(name = "nombre_vacuna", type = String::class),
+                ColumnResult(name = "numero_dosis", type = String::class),
+                ColumnResult(name = "edad_minima", type = Short::class),
+                ColumnResult(name = "fecha_aplicacion", type = LocalDateTime::class),
+                ColumnResult(name = "intervalo_recomendado", type = Double::class),
+                ColumnResult(name = "intervalo_real", type = Int::class),
+                ColumnResult(name = "nombre_sede", type = String::class),
+                ColumnResult(name = "dependencia_sede", type = String::class),
+                ColumnResult(name = "id", type = UUID::class),
+                ColumnResult(name = "id_vacuna", type = UUID::class),
+                ColumnResult(name = "id_sede", type = UUID::class),
+                ColumnResult(name = "id_dosis", type = UUID::class),
+            ],
+        ),
     ],
 )
 @KonvertFrom(PacienteModel::class)

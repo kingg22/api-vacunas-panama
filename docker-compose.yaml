@@ -24,6 +24,8 @@ services:
         ipv4_address: 172.22.0.2
 
   redis-vacunas:
+    profiles:
+      - prod
     image: redis/redis-stack:latest
     container_name: cache
     restart: always
@@ -38,6 +40,8 @@ services:
         ipv4_address: 172.22.0.3
 
   api-vacunas:
+    profiles:
+      - prod
     image: kingg22/api-vacunas-panama:latest
     container_name: api
     env_file:

@@ -256,8 +256,7 @@ class UsuarioServiceImpl(
 
     private fun validateWarningsRegistration(usuarioDto: UsuarioDto): List<ApiError> {
         val apiErrorList = mutableListOf<ApiError>()
-        if (usuarioDto.roles.any { rolDto -> rolDto.permisos.isNotEmpty() }
-        ) {
+        if (usuarioDto.roles.any { rolDto -> rolDto.permisos.isNotEmpty() }) {
             apiErrorList += createApiErrorBuilder {
                 withCode(ApiResponseCode.INFORMATION_IGNORED)
                 withProperty("roles[].permisos[]")
