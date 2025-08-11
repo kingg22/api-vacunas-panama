@@ -13,7 +13,6 @@ import io.github.kingg22.api.vacunas.panama.response.ActualApiResponse
 import io.github.kingg22.api.vacunas.panama.response.ApiResponseCode
 import io.github.kingg22.api.vacunas.panama.response.ApiResponseFactory.createResponseBuilder
 import io.github.kingg22.api.vacunas.panama.response.returnIfErrors
-import io.github.kingg22.api.vacunas.panama.util.ifPresentOrElse
 import io.github.kingg22.api.vacunas.panama.util.logger
 import jakarta.enterprise.context.ApplicationScoped
 import java.util.UUID
@@ -73,7 +72,7 @@ class VacunaServiceImpl(
             }
         }
 
-        vacunaPersistenceService.findTopDosisByPacienteAndVacuna(paciente, vacuna).ifPresentOrElse({
+        vacunaPersistenceService.findTopDosisByPacienteAndVacuna(paciente, vacuna)?.let {
             log.debug("Última dosis encontrada, ID: {}", it.id)
             val numeroDosis = it.numeroDosis.getNumeroDosisAsEnum()
             if (!numeroDosis.isValidNew(insertDosisDto.numeroDosis)) {
@@ -82,10 +81,10 @@ class VacunaServiceImpl(
                     "La dosis ${insertDosisDto.numeroDosis} no es válida. Último número de dosis $numeroDosis",
                     "numero_dosis",
                 )
-                return@ifPresentOrElse
+                return@let
             }
             log.debug("Nueva dosis cumple las reglas de secuencia en número de dosis")
-        }) { log.debug("El paciente no tiene dosis previas") }
+        } ?: run { log.debug("El paciente no tiene dosis previas") }
         contentResponse.build().returnIfErrors()?.let { return it as ActualApiResponse }
 
         val dosis = vacunaPersistenceService.createAndSaveDosis(

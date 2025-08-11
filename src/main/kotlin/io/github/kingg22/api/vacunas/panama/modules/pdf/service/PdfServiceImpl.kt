@@ -5,7 +5,6 @@ import io.github.kingg22.api.vacunas.panama.modules.paciente.dto.PacienteDto
 import io.github.kingg22.api.vacunas.panama.modules.pdf.dto.PdfDto
 import io.github.kingg22.api.vacunas.panama.modules.vacuna.dto.DosisDto
 import io.github.kingg22.api.vacunas.panama.util.logger
-import io.github.kingg22.api.vacunas.panama.util.orElse
 import jakarta.enterprise.context.ApplicationScoped
 import java.io.ByteArrayOutputStream
 import java.util.Base64
@@ -97,7 +96,7 @@ class PdfServiceImpl : PdfService {
     private fun obtenerIdentificacion(pacienteDto: PacienteDto) = pacienteDto.persona.let { persona ->
         persona.cedula.takeIf { !it.isNullOrBlank() } ?: persona.pasaporte.takeIf { !it.isNullOrBlank() }
             ?: pacienteDto.identificacionTemporal.takeIf { !it.isNullOrBlank() } ?: (
-            persona.id?.toString() orElse {
+            persona.id?.toString() ?: run {
                 val fakeId = "INVALID-${UUID.randomUUID()}"
                 log.error("ID de la persona es null. Generando identificador temporal: $fakeId")
                 fakeId

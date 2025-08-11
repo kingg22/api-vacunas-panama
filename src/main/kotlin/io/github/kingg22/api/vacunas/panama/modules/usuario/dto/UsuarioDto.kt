@@ -35,6 +35,7 @@ data class UsuarioDto(
     val username: String? = null,
 
     @all:Size(min = 8, max = 70, message = "La contraseña no es válida")
+    @all:JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     val password: String,
 
     @all:JsonProperty(value = "created_at")
