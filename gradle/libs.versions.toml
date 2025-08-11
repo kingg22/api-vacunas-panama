@@ -1,7 +1,7 @@
 [versions]
 # https://github.com/JetBrains/kotlin/releases
 kotlin = "2.2.0"
-# https://github.com/JetBrains/kotlin/releases
+# https://github.com/google/ksp/releases
 ksp = "2.2.0-2.0.2"
 
 # PDF
@@ -14,19 +14,21 @@ itextpdf-html = "6.2.0"
 # https://github.com/mcarleio/konvert/releases
 konvert = "4.1.2"
 # https://github.com/diffplug/spotless/releases
-spotless = "7.1.0"
+spotless = "7.2.1"
 # https://github.com/jk1/Gradle-License-Report/releases
 gradle-license-report = "2.9"
+# https://github.com/pinterest/ktlint/releases
+ktlint-pinterest = "1.7.1"
 # https://github.com/jlleitschuh/ktlint-gradle/releases
-ktlint = "12.3.0"
+ktlint = "13.0.0"
 
 # Testing
 # https://github.com/Kotlin/kotlinx-kover/releases
 kover = "0.9.1"
 # https://github.com/mockk/mockk/releases
-mockk = "1.14.0"
+mockk = "1.14.5"
 # https://github.com/kotest/kotest/releases
-kotest = "6.0.0.M5"
+kotest = "6.0.0.M14"
 # https://github.com/LemonAppDev/konsist/releases
 konsist = "0.17.3"
 # https://github.com/rest-assured/rest-assured/tags
@@ -36,7 +38,7 @@ rest-assured = "5.5.5"
 # Quarkus
 # https://github.com/quarkusio/quarkus/releases
 # https://github.com/quarkusio/quarkus-platform/tags
-quarkus = "3.24.3"
+quarkus = "3.24.5"
 
 [libraries]
 jackson-datatype-jsr310 = { group = "com.fasterxml.jackson.datatype", name = "jackson-datatype-jsr310" }

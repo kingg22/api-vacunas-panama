@@ -20,7 +20,7 @@ plugins {
 }
 
 group = "io.github.kingg22"
-version = "0.16.0"
+version = "0.17.0"
 
 kotlin {
     jvmToolchain {
@@ -57,16 +57,12 @@ allOpen {
 }
 
 tasks.withType<Test> {
-    val agentJar = configurations.testRuntimeClasspath.get().find {
-        it.name.contains("byte-buddy-agent")
-    } ?: throw GradleException("ByteBuddy agent JAR not found")
-
     systemProperty("java.util.logging.manager", "org.jboss.logmanager.LogManager")
-    jvmArgs("-javaagent:${agentJar.absolutePath}", "-Duser.timezone=UTC")
+    jvmArgs("-Duser.timezone=UTC")
 }
 
 ktlint {
-    version.set("1.6.0")
+    version.set(libs.versions.ktlint.pinterest.get())
 }
 
 spotless {
