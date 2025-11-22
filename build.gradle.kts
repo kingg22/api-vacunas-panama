@@ -22,7 +22,7 @@ plugins {
 }
 
 group = "io.github.kingg22"
-version = "0.17.0"
+version = "0.17.1"
 
 kotlin {
     jvmToolchain {
