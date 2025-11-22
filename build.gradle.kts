@@ -2,7 +2,9 @@ import com.diffplug.spotless.LineEnding
 import com.github.jk1.license.filter.LicenseBundleNormalizer
 import com.github.jk1.license.render.InventoryMarkdownReportRenderer
 import kotlinx.kover.gradle.plugin.dsl.CoverageUnit
+import org.jetbrains.kotlin.gradle.dsl.JvmDefaultMode
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 plugins {
     kotlin("jvm") version libs.versions.kotlin
@@ -29,8 +31,12 @@ kotlin {
     }
     compilerOptions {
         freeCompilerArgs.addAll("-Xjsr305=strict", "-Xannotation-target-all")
+        apiVersion.set(KotlinVersion.KOTLIN_2_2)
+        languageVersion.set(KotlinVersion.KOTLIN_2_2)
         jvmTarget.set(JvmTarget.JVM_21)
+        jvmDefault.set(JvmDefaultMode.NO_COMPATIBILITY)
         javaParameters.set(true)
+        extraWarnings.set(false) // Generated code have warnings
         allWarningsAsErrors.set(true)
     }
 }
@@ -62,7 +68,7 @@ tasks.withType<Test> {
 }
 
 ktlint {
-    version.set(libs.versions.ktlint.pinterest.get())
+    version.set(libs.versions.ktlint.pinterest)
 }
 
 spotless {
@@ -133,6 +139,6 @@ Some problems were found with the configuration of task ':compileKotlin' (type '
       2. Declare an explicit dependency on ':compileQuarkusGeneratedSourcesJava' from ':compileKotlin' using Task#dependsOn.
       3. Declare an explicit dependency on ':compileQuarkusGeneratedSourcesJava' from ':compileKotlin' using Task#mustRunAfter.
  */
-tasks.named("compileQuarkusGeneratedSourcesJava") {
+tasks.compileQuarkusGeneratedSourcesJava {
     enabled = false
 }
