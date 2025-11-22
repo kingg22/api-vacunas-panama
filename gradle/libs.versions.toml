@@ -32,21 +32,21 @@ kotest = "6.0.5"
 # https://github.com/LemonAppDev/konsist/releases
 konsist = "0.17.3"
 # https://github.com/rest-assured/rest-assured/tags
-rest-assured = "5.5.6"
+#rest-assured = "5.5.6"
 #redis-testcontainers = "2.2.2"
 
 # Quarkus
 # https://github.com/quarkusio/quarkus/releases
 # https://github.com/quarkusio/quarkus-platform/tags
-quarkus = "3.24.5"
+quarkus = "3.29.4"
 
 [libraries]
 jackson-datatype-jsr310 = { group = "com.fasterxml.jackson.datatype", name = "jackson-datatype-jsr310" }
 
 # Kotlin
 ## Kotlin required to Quarkus
-kotlin-jdk8 = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8", version.ref = "kotlin" }
-kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
+kotlin-jdk8 = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8" }
+kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect" }
 kotlinx-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core" }
 kotlinx-coroutines-reactor = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-reactor" }
 ## Extensions
@@ -58,7 +58,7 @@ testcontainers-junit = { group = "org.testcontainers", name = "junit-jupiter" }
 testcontainers-postgres = { group = "org.testcontainers", name = "postgresql" }
 #testcontainers-redis = { group = "com.redis", name = "testcontainers-redis", version.ref = "redis-testcontainers" }
 ## Kotlin
-kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
+kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test" }
 ## Mockk
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
@@ -68,8 +68,8 @@ kotest-assertions-json = { group = "io.kotest", name = "kotest-assertions-json",
 ## Konsist
 konsist = { group = "com.lemonappdev", name = "konsist", version.ref = "konsist" }
 ## Rest assured
-rest-assured = { group = "io.rest-assured", name = "rest-assured", version.ref = "rest-assured" }
-rest-assured-kotlin = { group = "io.rest-assured", name = "kotlin-extensions", version.ref = "rest-assured" }
+rest-assured = { group = "io.rest-assured", name = "rest-assured" }
+rest-assured-kotlin = { group = "io.rest-assured", name = "kotlin-extensions" }
 
 # Konvert
 konvert-api = { group = "io.mcarle", name = "konvert-api", version.ref = "konvert" }
