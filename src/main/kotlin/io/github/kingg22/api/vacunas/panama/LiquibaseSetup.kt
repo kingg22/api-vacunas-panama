@@ -23,11 +23,17 @@ import java.time.ZoneOffset.UTC
 import java.util.Optional
 import java.util.TimeZone
 import kotlin.jvm.optionals.getOrElse
+import kotlin.jvm.optionals.getOrNull
 
 /* Copy of https://github.com/quarkusio/quarkus/issues/14682#issuecomment-1205682175 */
 @ApplicationScoped
 @Startup
 class LiquibaseSetup {
+    companion object {
+        private const val FILE_SYSTEM_PREFIX = "filesystem:"
+    }
+    private val logger = logger()
+
     @ConfigProperty(name = "quarkus.liquibase.enabled")
     private lateinit var active: Optional<Boolean>
 
@@ -55,58 +61,57 @@ class LiquibaseSetup {
     @ConfigProperty(name = "quarkus.liquibase.search-path")
     private lateinit var searchPath: Optional<List<String>>
 
-    private val filesystemPrefix = "filesystem:"
-
     @PostConstruct
     fun init() {
         TimeZone.setDefault(TimeZone.getTimeZone(UTC))
-        launchMigrationInBackground()
-    }
-
-    private fun launchMigrationInBackground() {
         if (active.getOrElse { false }) {
-            Thread {
-                runLiquibaseMigration()
-            }.start()
+            runLiquibaseMigration()
         }
     }
 
     private fun runLiquibaseMigration() {
-        val logger = logger()
         var liquibase: Liquibase? = null
         try {
+            logger.info("Starting Liquibase migration")
             val contexts = createContexts()
             val labels = createLabels()
             logger.info("liquibase setup to $datasourceUrl")
             logger.info("Liquibase with contexts [$contexts] and labels [$labels]")
-            val resourceAccessor: ResourceAccessor = resolveResourceAccessor()
-            check(datasourceUrl.isNotEmpty() || datasourceUrlJdbc.isPresent) {
-                "Datasource url must not be empty for Liquibase to run. Found: $datasourceUrl"
-            }
-            val uniqueDatasource = if (datasourceUrl.size > 1) {
-                datasourceUrl.first {
-                    it.contains("vertx-reactive") || it.contains("\\d*".toRegex())
+
+            val uniqueDatasource = when {
+                datasourceUrl.size > 1 -> datasourceUrl.first { url ->
+                    url.contains("vertx-reactive") || url.contains("\\d*".toRegex())
                 }
-            } else if (datasourceUrl.size == 1) {
-                datasourceUrl.first()
+
+                datasourceUrl.size == 1 -> datasourceUrl.first()
+
+                datasourceUrlJdbc.isPresent -> datasourceUrlJdbc.get()
+
+                else -> error(
+                    "Datasource url must not be empty for Liquibase to run. Found URL: $datasourceUrl and JDBC: '${datasourceUrlJdbc.getOrNull()}'",
+                )
+            }.replaceFirst("vertx-reactive", "jdbc")
+
+            val fixedUrl = if (!uniqueDatasource.startsWith("jdbc:")) {
+                logger.warn("Fixed datasource url to 'jdbc:$uniqueDatasource'")
+                "jdbc:$uniqueDatasource"
             } else {
-                datasourceUrlJdbc.get()
+                uniqueDatasource
             }
-            var fixedUrl = uniqueDatasource.replace("vertx-reactive", "jdbc")
-            if (!fixedUrl.startsWith("jdbc:")) {
-                fixedUrl = "jdbc:$fixedUrl"
-                logger.warn("Fixed datasource url to $fixedUrl")
+            logger.info("Using datasource url: '$fixedUrl'")
+
+            resolveResourceAccessor().use { resourceAccessor ->
+                val conn: DatabaseConnection = DatabaseFactory.getInstance().openConnection(
+                    fixedUrl,
+                    datasourceUsername,
+                    datasourcePassword,
+                    null,
+                    resourceAccessor,
+                )
+                liquibase = Liquibase(parseChangeLog(changeLogLocation), resourceAccessor, conn)
+                liquibase.update(contexts, labels)
+                logger.info("Liquibase migration finished successfully")
             }
-            logger.info("Using datasource url: $fixedUrl")
-            val conn: DatabaseConnection = DatabaseFactory.getInstance().openConnection(
-                fixedUrl,
-                datasourceUsername,
-                datasourcePassword,
-                null,
-                resourceAccessor,
-            )
-            liquibase = Liquibase(parseChangeLog(changeLogLocation), resourceAccessor, conn)
-            liquibase.update(contexts, labels)
         } catch (e: Exception) {
             logger.error("Liquibase Migration Exception: ", e)
         } finally {
@@ -131,7 +136,7 @@ class LiquibaseSetup {
             ClassLoaderResourceAccessor(Thread.currentThread().getContextClassLoader()),
         )
 
-        if (!changeLogLocation.startsWith(filesystemPrefix) && searchPath.isEmpty) {
+        if (!changeLogLocation.startsWith(FILE_SYSTEM_PREFIX) && searchPath.isEmpty) {
             return rootAccessor
         }
 
@@ -140,7 +145,7 @@ class LiquibaseSetup {
                 DirectoryResourceAccessor(
                     Paths.get(
                         StringUtil
-                            .changePrefix(changeLogLocation, filesystemPrefix, ""),
+                            .changePrefix(changeLogLocation, FILE_SYSTEM_PREFIX, ""),
                     ).parent,
                 ),
             )
@@ -156,13 +161,13 @@ class LiquibaseSetup {
         rootAccessor.addResourceAccessor(NativeImageResourceAccessor())
 
     private fun parseChangeLog(changeLog: String): String {
-        if (changeLog.startsWith(filesystemPrefix) && searchPath.isEmpty) {
-            return Paths.get(StringUtil.changePrefix(changeLog, filesystemPrefix, ""))
+        if (changeLog.startsWith(FILE_SYSTEM_PREFIX) && searchPath.isEmpty) {
+            return Paths.get(StringUtil.changePrefix(changeLog, FILE_SYSTEM_PREFIX, ""))
                 .fileName.toString()
         }
 
-        if (changeLog.startsWith(filesystemPrefix)) {
-            return StringUtil.changePrefix(changeLog, filesystemPrefix, "")
+        if (changeLog.startsWith(FILE_SYSTEM_PREFIX)) {
+            return StringUtil.changePrefix(changeLog, FILE_SYSTEM_PREFIX, "")
         }
 
         if (changeLog.startsWith("classpath:")) {
