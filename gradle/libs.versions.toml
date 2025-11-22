@@ -1,14 +1,14 @@
 [versions]
 # https://github.com/JetBrains/kotlin/releases
-kotlin = "2.2.0"
+kotlin = "2.2.21"
 # https://github.com/google/ksp/releases
-ksp = "2.2.0-2.0.2"
+ksp = "2.3.3"
 
 # PDF
 # https://github.com/itext/itext-java/releases
-itextpdf-core = "9.2.0"
+itextpdf-core = "9.4.0"
 # https://github.com/itext/itext-pdfhtml-java/releases
-itextpdf-html = "6.2.0"
+itextpdf-html = "6.3.0"
 
 # Plugins
 # https://github.com/mcarleio/konvert/releases
