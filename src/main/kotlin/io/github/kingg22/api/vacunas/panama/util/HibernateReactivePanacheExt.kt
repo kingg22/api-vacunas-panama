@@ -1,6 +1,6 @@
 package io.github.kingg22.api.vacunas.panama.util
 
-import io.quarkus.hibernate.reactive.panache.Panache
+import io.quarkus.hibernate.reactive.panache.kotlin.Panache
 import io.smallrye.mutiny.Uni
 import io.smallrye.mutiny.coroutines.awaitSuspending
 import io.smallrye.mutiny.coroutines.uni
