@@ -12,15 +12,15 @@ itextpdf-html = "6.3.0"
 
 # Plugins
 # https://github.com/mcarleio/konvert/releases
-konvert = "4.1.2"
+konvert = "4.4.0"
 # https://github.com/diffplug/spotless/releases
-spotless = "7.2.1"
+spotless = "8.1.0"
 # https://github.com/jk1/Gradle-License-Report/releases
-gradle-license-report = "2.9"
+gradle-license-report = "3.0.1"
 # https://github.com/pinterest/ktlint/releases
-ktlint-pinterest = "1.7.1"
+ktlint-pinterest = "1.7.1" # Until ktlint gradle plugin supports 1.8 approperly
 # https://github.com/jlleitschuh/ktlint-gradle/releases
-ktlint = "13.0.0"
+ktlint = "14.0.1"
 
 # Testing
 # https://github.com/Kotlin/kotlinx-kover/releases
