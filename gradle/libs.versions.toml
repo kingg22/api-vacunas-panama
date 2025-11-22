@@ -24,15 +24,15 @@ ktlint = "14.0.1"
 
 # Testing
 # https://github.com/Kotlin/kotlinx-kover/releases
-kover = "0.9.1"
+kover = "0.9.3"
 # https://github.com/mockk/mockk/releases
-mockk = "1.14.5"
+mockk = "1.14.6"
 # https://github.com/kotest/kotest/releases
-kotest = "6.0.0.M14"
+kotest = "6.0.5"
 # https://github.com/LemonAppDev/konsist/releases
 konsist = "0.17.3"
 # https://github.com/rest-assured/rest-assured/tags
-rest-assured = "5.5.5"
+rest-assured = "5.5.6"
 #redis-testcontainers = "2.2.2"
 
 # Quarkus
